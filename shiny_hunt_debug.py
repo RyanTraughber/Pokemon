@@ -151,16 +151,11 @@ nx.wait_for_connection(controller)
 
 log("Controller connected!")
 
-
 # ==========================
 # BUTTON FUNCTIONS
 # ==========================
 
-# ==========================
-# BUTTON FUNCTIONS
-# ==========================
-
-def press(button, duration=0.25):
+def press(button, duration=0.5):
 
     log(f"Pressing {button} for {duration}s")
 
@@ -174,7 +169,7 @@ def press(button, duration=0.25):
     time.sleep(0.05)
 
 
-def press_combo(buttons, duration=0.25):
+def press_combo(buttons, duration=0.5):
 
     log(f"Pressing combo {buttons} for {duration}s")
 
@@ -201,7 +196,7 @@ def run_sequence():
     	nuxbt.Buttons.Y
 	], 0.4)
 
-    wait_with_preview(4)
+    wait_with_preview(5)
 
     press(nuxbt.Buttons.A)
     wait_with_preview(1)
@@ -289,7 +284,7 @@ def save_and_close():
 
     wait_with_preview(10)
 
-    press(nuxbt.Buttons.HOME)
+    press(nuxbt.Buttons.HOME, 0.2)
     wait_with_preview(5)
 
     press(nuxbt.Buttons.X)
@@ -305,10 +300,33 @@ def save_and_close():
 reset_count = 0
 start_time = time.time()
 
+goof_count = 0
+goof_times = []
+
 log("Shiny hunter started.")
 
 time.sleep(15)
 create_dashboard()
+
+
+def shiny_probability(attempts):
+
+    odds = 8192
+
+    probability = 1 - ((odds - 1) / odds) ** attempts
+
+    return probability * 100
+    
+def expected_resets_remaining(attempts):
+
+    odds = 8192
+
+    remaining = odds - attempts
+
+    if remaining < 0:
+        remaining = 0
+
+    return remaining
 
 
 # ==========================
@@ -328,25 +346,72 @@ while True:
 
     elapsed = time.time() - start_time
 
+    prob = shiny_probability(reset_count)
+    
+    remaining = expected_resets_remaining(reset_count)
+
     log(f"Attempt {reset_count}")
     log(f"Charmander pixel RGB: {r} {g} {b}")
+
+    # ==========================
+    # DESYNC BUG CHECK
+    # ==========================
+
+    if (r, g, b) in [(255,255,255), (115,255,255)]: 
+
+        goof_count += 1
+        goof_times.append(round(elapsed/60,2))
+
+        log("⚠ Program goof detected")
+
+        update_dashboard(
+            f"🎮 **Shiny Hunter Running**\n\n"
+            f"Attempts: {reset_count}\n"
+            f"Pixel RGB: {r},{g},{b}\n"
+            f"Time: {round(elapsed/60,2)} minutes\n\n"
+            f"📊Chance of shiny by now: {prob:.2f}%\n"
+            f"🤓☝️Expected resets remaining: {remaining}\n\n"
+            f"Program goofed: {goof_count} times\n"
+            f"Times: {goof_times}",
+            frame
+        )
+
+        reset_count += 1
+        continue
+
+
+    # ==========================
+    # NORMAL DASHBOARD UPDATE
+    # ==========================
 
     update_dashboard(
         f"🎮 **Shiny Hunter Running**\n\n"
         f"Attempts: {reset_count}\n"
         f"Pixel RGB: {r},{g},{b}\n"
-        f"Time: {round(elapsed/60,2)} minutes",
+        f"Time: {round(elapsed/60,2)} minutes\n\n"
+        f"📊 Chance of shiny by now: {prob:.2f}%\n\n"
+        f"⚠ Program goofed: {goof_count} times\n"
+        f"Times: {goof_times}",
         frame
     )
+
+
+    # ==========================
+    # SHINY CHECK
+    # ==========================
 
     if g >= SHINY_GREEN_THRESHOLD:
 
         log("✨ SHINY FOUND ✨")
 
         update_dashboard(
-            f"✨ **SHINY FOUND!** ✨\n"
+            f"✨ **SHINY FOUND!** ✨\n\n"
             f"Resets: {reset_count}\n"
-            f"Time: {round(elapsed/60,2)} minutes",
+            f"Time: {round(elapsed/60,2)} minutes\n\n"
+            f"📊 Chance of shiny by now: {prob:.2f}%\n\n"
+            f"⚠ Program goofed: {goof_count} times\n"
+            f"Time: {round(elapsed/60,2)} minutes\n"
+            f"Chance by now: {prob:.2f}%",
             frame
         )
 
