@@ -169,6 +169,14 @@ def press(button, duration=0.5):
     time.sleep(0.05)
 
 
+def spam(button, seconds):
+	log(f"Spamming {button} for {seconds}s")
+	end =time.time() + seconds
+	while time.time() < end:
+		press(button, 0.1)
+		update_preview()
+		time.sleep(00.05)
+
 def press_combo(buttons, duration=0.5):
 
     log(f"Pressing combo {buttons} for {duration}s")
@@ -194,52 +202,42 @@ def run_sequence():
     	nuxbt.Buttons.B,
     	nuxbt.Buttons.X,
     	nuxbt.Buttons.Y
-	], 0.4)
+	], 0.1)
+	
+    press_combo([
+    	nuxbt.Buttons.A,
+    	nuxbt.Buttons.B,
+    	nuxbt.Buttons.X,
+    	nuxbt.Buttons.Y
+	], 0.1)
+	
+    press_combo([
+    	nuxbt.Buttons.A,
+    	nuxbt.Buttons.B,
+    	nuxbt.Buttons.X,
+    	nuxbt.Buttons.Y
+	], 0.1)
+	
+    press_combo([
+    	nuxbt.Buttons.A,
+    	nuxbt.Buttons.B,
+    	nuxbt.Buttons.X,
+    	nuxbt.Buttons.Y
+	], 0.1)
 
-    wait_with_preview(5)
+    spam(nuxbt.Buttons.A, 17)
 
-    press(nuxbt.Buttons.A)
-    wait_with_preview(1)
+    spam(nuxbt.Buttons.B, 3)
 
-    press(nuxbt.Buttons.B)
-    wait_with_preview(2)
-
-    press(nuxbt.Buttons.A)
-    wait_with_preview(5)
-
-    press(nuxbt.Buttons.A)
-    wait_with_preview(4)
-
-    press(nuxbt.Buttons.B)
-    wait_with_preview(4)
-
-    press(nuxbt.Buttons.A)
-    wait_with_preview(2)
-
-    press(nuxbt.Buttons.A)
-    wait_with_preview(2)
-
-    press(nuxbt.Buttons.A)
-    wait_with_preview(2)
-
-    press(nuxbt.Buttons.A)
-    wait_with_preview(6)
-
-    press(nuxbt.Buttons.B)
-    wait_with_preview(4)
-
-    press(nuxbt.Buttons.A)
-    wait_with_preview(5)
+    spam(nuxbt.Buttons.A, 6)
 
     press(nuxbt.Buttons.X)
     wait_with_preview(1)
 
     press(nuxbt.Buttons.A)
-    wait_with_preview(2)
-
+    wait_with_preview(1)
     press(nuxbt.Buttons.A)
     wait_with_preview(1)
-
     press(nuxbt.Buttons.A)
 
     log("Waiting for summary screen...")
@@ -366,7 +364,7 @@ while True:
 
         update_dashboard(
             f"🎮 **Shiny Hunter Running**\n\n"
-            f"Attempts: {reset_count}\n"
+            f"Attempts this program run: {reset_count}\n"
             f"Pixel RGB: {r},{g},{b}\n"
             f"Time: {round(elapsed/60,2)} minutes\n\n"
             f"📊Chance of shiny by now: {prob:.2f}%\n"
@@ -386,7 +384,7 @@ while True:
 
     update_dashboard(
     	f"🎮 **Shiny Hunter Running**\n\n"
-    	f"Attempts: {reset_count}\n"
+    	f"Attempts this program run: {reset_count}\n"
     	f"Pixel RGB: {r},{g},{b}\n"
     	f"Time: {round(elapsed/60,2)} minutes\n\n"
     	f"📊Chance of shiny by now: {prob:.2f}%\n"
@@ -407,7 +405,7 @@ while True:
 
         update_dashboard(
             f"✨ **SHINY FOUND!** ✨\n\n"
-            f"Resets: {reset_count}\n"
+            f"Resets this run: {reset_count}\n"
             f"Time: {round(elapsed/60,2)} minutes\n\n"
             f"📊 Chance of shiny by now: {prob:.2f}%\n\n"
             f"⚠ Program goofed: {goof_count} times\n"
