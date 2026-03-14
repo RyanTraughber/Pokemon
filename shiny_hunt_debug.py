@@ -297,7 +297,7 @@ def save_and_close():
 # TRACKING
 # ==========================
 
-reset_count = 0
+reset_count = 1
 start_time = time.time()
 
 goof_count = 0
@@ -385,15 +385,16 @@ while True:
     # ==========================
 
     update_dashboard(
-        f"🎮 **Shiny Hunter Running**\n\n"
-        f"Attempts: {reset_count}\n"
-        f"Pixel RGB: {r},{g},{b}\n"
-        f"Time: {round(elapsed/60,2)} minutes\n\n"
-        f"📊 Chance of shiny by now: {prob:.2f}%\n\n"
-        f"⚠ Program goofed: {goof_count} times\n"
-        f"Times: {goof_times}",
-        frame
-    )
+    	f"🎮 **Shiny Hunter Running**\n\n"
+    	f"Attempts: {reset_count}\n"
+    	f"Pixel RGB: {r},{g},{b}\n"
+    	f"Time: {round(elapsed/60,2)} minutes\n\n"
+    	f"📊Chance of shiny by now: {prob:.2f}%\n"
+    	f"🤓☝️Expected resets remaining: {remaining}\n\n"
+    	f"Program goofed: {goof_count} times\n"
+    	f"Times: {goof_times}",
+    	frame
+    ) 
 
 
     # ==========================
